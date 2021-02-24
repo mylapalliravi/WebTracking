@@ -1,0 +1,77 @@
+﻿@model IEnumerable<WebTracking.Models.DayView>
+@{
+    ViewBag.Title = "Day-Plans";
+    WebGrid grid = new WebGrid(Model, canPage: false, canSort: false);
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <script type="text/javascript">
+        function DayWise() {
+            $().on('click', function () {
+                var tr = $(this).parents('tr:first');
+                var Subject = tr.find("#dayhour").val();
+                var dayhourid = tr.find("#dayhourid").val();
+                tr.find("#dayhour").text(Subject);
+                tr.find("#dayhourid").text(dayhourid);
+            });
+        }
+
+    </script>
+    <style>
+        #_DayWise, #_Show, #_Clear {
+            display: inline-block;
+            vertical-align: top;
+        }
+
+        .info {
+            background-color: #e7f3fe;
+            border-left: 6px solid #2196F3;
+        }
+    </style>
+
+</head>
+<body>
+    <form name="frm" method="post" action="@Url.Action("DayWise","DayWise")" id="frm">
+    
+     
+        <div class="well">
+        
+             
+            <div class="form-group col-md-12">
+                <p><strong>Day Plans</strong></p>
+                <input type="date" id="date" name="date"    style="height:35px; width:200px; padding-left:35px;" />
+                <script>
+                    document.getElementById('date').value = new Date().toISOString().substring(0, 10);
+                </script>
+                <button id="_Show" class="btn btn-primary " type="button">Show</button>
+                <button id="_DayWise" type="submit" class="btn btn-success">Save</button>
+                <button id="_Clear" type="reset" onclick="frm.reset();" class="btn btn-warning">Clear</button>
+            </div>
+            
+         
+        </div>
+        <div class="form-group" id="gridContent" style="padding:20px; margin:8px; border:2px; overflow-y:scroll; height:100%;width:1130px;">
+            @grid.GetHtml(
+                    columns:
+                        grid.Columns(
+
+grid.Column("", "", format: @<text>  <input type="hidden" name="dayhourid" id="dayhourid" value="@item.dayhourid" style="width:700px; height:40px;" class="edit-mode form-control" /></text>, style: "col2Width"),
+
+grid.Column("dayhour", "DayHour", format: @<label name="dayhour"> <span class="display-mode" name="dayhour"> @*<label style="align-content:center;" name="dayhour">*@@item.dayhour @*</label>*@ </span> </label>, style: "col2Width"),
+grid.Column("Description", "Description", format: @<text>  <input type="text" name="Description" id="Description"  style="width:700px; height:40px;" class="edit-mode form-control" /></text>, style: "col2Width"),
+grid.Column("", format: @<text>
+    <button class="btn btn-success  save-user edit-mode"><span class="glyphicon glyphicon-saved"></span></button>
+    <button onclick="frm.reset();" class="btn btn-warning  cancel-user edit-mode"><span class="glyphicon glyphicon-remove "></span></button>
+</text>, style: "col3Width", canSort: false)
+))
+        </div>
+    </form>
+</body>
+</html>
+
+
+
+
+
+

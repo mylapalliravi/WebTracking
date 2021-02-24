@@ -1,0 +1,135 @@
+﻿@using WebTracking.Models
+@model TrackingTables
+@{
+    Layout = null;
+}
+
+<html class="supernova">
+<head>
+    <title>Online Complaint Form</title>
+    <link href="~/assets/admin/layout4/css/themes/5e6b428acc8c4e222d1beb91.css" rel="stylesheet" />
+</head>
+<body>
+    @if (ViewBag.Exception != null)
+    {
+        <label style="color:red">Exception Error:<br />@ViewBag.Exception</label>
+    }
+    <form class="jotform-form" method="post" name="form_203138538159459" accept-charset="utf-8" autocomplete="on">
+        <div role="main" class="form-all">
+            <ul class="form-section page-section">
+                <li id="cid_1" class="form-input-wide" data-type="control_head" style="float: right;width: 70%;">
+                    <div class="form-header-group header-large">
+                        <div>
+                            <div class="header-text httal htvam">
+                                <h1 id="header_1" class="form-header" data-component="header">
+                                    Customer Complaint
+                                </h1>
+                                <div id="subHeader_1" class="form-subHeader">
+                                    Please complete the form below for your complaints.
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </li>
+                <li id="cid_1" class="form-input-wide" data-type="control_head" style="float: left;width:30%;padding: 33px 0px 0px 14px;">
+
+                    <span style="font-size:medium;font-size: 12px;color: gray;">
+
+                        <br />
+                        <strong>version : </strong><span>@System.Configuration.ConfigurationManager.AppSettings["Version"]</span><br />
+                     
+                    </span>
+
+
+                </li>
+
+                <li class="form-line" data-type="control_phone" id="id_16">
+                    <label class="form-label form-label-top form-label-auto" id="label_16" for="input_16_full"> Lr No / Consignment NO <span style="color:red;">*</span></label>
+                    <div id="cid_16" class="form-input-wide" data-layout="half">
+                        <span class="form-sub-label-container" style="vertical-align:top">
+                            <input type="text" name="DocketNo" class=" form-textbox validate" style="width:310px" data-masked="true" value="" aria-labelledby="label_16 sublabel_16_masked" required />
+                        </span>
+                    </div>
+                </li>
+
+                <li class="form-line" data-type="control_phone" id="id_16">
+                    <label class="form-label form-label-top form-label-auto" id="label_16" for="input_16_full"> Related </label>
+                    <div id="cid_16" class="form-input-wide" data-layout="half">
+                        <span class="form-sub-label-container" style="vertical-align:top">
+                            <select class="form-textbox validate" name="complaincode" required>
+                                <option>--Select Related--</option>
+                                @if (ViewBag.Related != null)
+                                {
+                                    foreach (var item in ViewBag.Related)
+                                    {
+                                        <option value="@item.complaincode">@item.Complaindesc</option>
+                                    }
+                                }
+                            </select>
+                        </span>
+                    </div>
+                </li>
+                <li class="form-line" data-type="control_phone" id="id_16">
+                    <label class="form-label form-label-top form-label-auto" id="label_16" for="input_16_full"> Name <span style="color:red;">*</span> </label>
+                    <div id="cid_16" class="form-input-wide" data-layout="half">
+                        <span class="form-sub-label-container" style="vertical-align:top">
+                            <input type="text" name="Customername" class=" form-textbox validate" style="width:310px" data-masked="true" value="" aria-labelledby="label_16 sublabel_16_masked" required />
+                        </span>
+                    </div>
+                </li>
+                <li class="form-line" data-type="control_phone" id="id_16">
+                    <label class="form-label form-label-top form-label-auto" id="label_16" for="input_16_full"> Mobile Number <span style="color:red;">*</span> </label>
+                    <div id="cid_16" class="form-input-wide" data-layout="half">
+                        <span class="form-sub-label-container" style="vertical-align:top">
+                            <input type="text" name="Mobile" maxlength="10" min="10" pattern="^+91(7\d|8\d|9\d)\d{9}$" class=" form-textbox validate" style="width:310px" data-masked="true" value="" aria-labelledby="label_16 sublabel_16_masked" required />
+                        </span>
+                    </div>
+                </li>
+                <li class="form-line" data-type="control_phone" id="id_16">
+                    <label class="form-label form-label-top form-label-auto" id="label_16" for="input_16_full"> Pincode <span style="color:red;">*</span></label>
+                    <div id="cid_16" class="form-input-wide" data-layout="half">
+                        <span class="form-sub-label-container" style="vertical-align:top">
+                            <input type="text" name="Pin" class=" form-textbox validate" maxlength="6" pattern="^\d{6}$" style="width:310px" data-masked="true" value="" aria-labelledby="label_16 sublabel_16_masked" required />
+                        </span>
+                    </div>
+                </li>
+                <li class="form-line" data-type="control_address" id="id_15">
+                    <label class="form-label form-label-top form-label-auto"> Address </label>
+                    <div id="cid_15" class="form-input-wide" data-layout="full">
+                        <div>
+                            <div>
+                                <span class="form-address-line form-address-street-line jsTest-address-lineField">
+                                    <span class="form-sub-label-container" style="vertical-align:top">
+<textarea type="text" name="Address1" class="form-textbox form-address-line" style="width:648px;height:100px" aria-labelledby="label_15 sublabel_15_addr_line1"></textarea>
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+
+                <li class="form-line" data-type="control_textarea" id="id_11">
+                    <label class="form-label form-label-top form-label-auto" id="label_11" for="input_11"> Complaint Issue <span style="color:red;">*</span> </label>
+                    <div id="cid_11" class="form-input-wide" data-layout="full">
+<textarea class="form-textarea" name="Issue" style="width:648px;height:163px" data-component="textarea" aria-labelledby="label_11" required></textarea>
+                    </div>
+                </li>
+
+                <li class="form-line" data-type="control_button" id="id_2">
+                    <div id="cid_2" class="form-input-wide" data-layout="full">
+                        <div data-align="left" class="form-buttons-wrapper form-buttons-left jsTest-button-wrapperField">
+                            <button id="input_2" type="submit" style="text-align:center;" value="Save" class="form-submit-button submit-button jf-form-buttons jsTest-submitField" data-component="button">
+                                Register
+                            </button>
+                            <button id="input_1" type="reset" style="background-color:darkorange" class="form-submit-button submit-button jf-form-buttons jsTest-submitField" data-component="button" data-content="">
+                                Clear
+                            </button>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </form>
+</body>
+</html>

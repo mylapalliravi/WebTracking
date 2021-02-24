@@ -1,0 +1,37 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>tabs</title>
+</head>
+<body>
+    <nav>
+        
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active"><a href="#first" aria-controls="first" role="tab" data-toggle="tab">Weekly Plans</a></li>
+            <li role="presentation"><a href="#second" aria-controls="second" role="tab" data-toggle="tab">Day Plans</a></li>
+        </ul>
+    </nav>
+
+    <div class="tab-content" id="nav-tabContent">
+      
+        <div role="tabpanel" class="tab-pane active" id="first">
+            @Html.Action("WeeklyPlans", "Home")
+
+        </div>
+
+     
+        <div role="tabpanel" class="tab-pane" id="second">
+
+            @Html.Action("DayPlan", "DayWise")
+        </div>
+
+    </div>
+    </body>
+</html>

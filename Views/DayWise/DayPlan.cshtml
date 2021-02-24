@@ -1,0 +1,281 @@
+﻿@using WebTracking.Models
+@model ListPlans
+@{
+    Layout = null;
+    ViewBag.Title = "Day-Plans";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>DayPlan</title>
+    <link href="~/assets/global/plugins/bootstrap/css/bootstrap.css" rel="stylesheet" />
+    @*<script src="~/assets/global/plugins/carousel-owl-carousel/assets/js/jquery-1.9.1.min.js"></script>*@
+    <style>
+        #_DayWise, #_Show, #_Clear {
+            display: inline-block;
+            vertical-align: top;
+        }
+
+        #start, #End, #Description, #_DayWise, #Clear {
+            display: inline-block;
+            vertical-align: top;
+        }
+
+        .info {
+            background-color: #e7f3fe;
+            border-left: 6px solid #2196F3;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.4.0.min.js"></script>
+    <link href="../../assets/global/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="../../assets/global/css/components-rounded.css" id="style_components" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <form method="post" name="frm" action="@Url.Action("DayPlan", "DayWise")" id="frm">
+        <div class="container-fluid">
+            <div style="height:30px; font-size:20px;" class="info">
+                <p><strong>Day Plans</strong></p>
+            </div>
+            <br />
+            <div class="well" style="height:70px;">
+                <div class="form-group">
+                    <div class="row">
+                        <div class="form-group col-md-12">
+                            @using (Html.BeginForm("SHOW", "DayWise", FormMethod.Get))
+                            {
+                                @Html.AntiForgeryToken()
+                                <input type="date" name="date" id="_today" style="height:35px; width:200px;" required />
+                                <script>
+                                    document.getElementById('_today').value = new Date().toISOString().substring(0, 10);
+                                </script>
+                                @*<a href="/DayWise/SHOW"  id="_Show" class="btn btn-primary"><span class="glyphicon glyphicon-search ">Show</span></a>*@
+                                <button id="_Show" type="submit" class="btn btn-primary" value="ShowPlans"><span>Show Plans</span></button>
+                            }
+                            <button id="_Clear" type="reset" onclick="frm.reset();" class="btn btn-warning">Clear</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12 well" style="height:90px;">
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <input type="time" class="form-control" min="08:00" max="22:00" name="From" id="From" />
+                        </div>
+                        <div class="col-md-2">
+                            <input type="time" class="form-control" min="08:00" max="22:00" name="To" id="To" />
+                        </div>
+                        <div class="col-md-6">
+                            <textarea type="text" id="Description" name="Description" placeholder="Enter Your Day Plans" class="form-control"></textarea>
+                        </div>
+                        <div class="col-md-2" style="border-radius:50px;">
+                            <button id="_DayWise" type="submit" class="btn btn-success"><span class="glyphicon glyphicon-ok-sign fa-4x">Save</span></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="portlet box blue" style="overflow-y:scroll;">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="glyphicon glyphicon-share-alt"></i>Day Plans List
+                    </div>
+                    <div class="tools">
+                        <a href="javascript:;" class="collapse"></a>
+                        <a href="#portlet-config" data-toggle="modal" class="config"></a>
+                        <a href="javascript:;" class="reload"></a>
+                        <a href="javascript:;" class="remove"></a>
+                    </div>
+                </div>
+                <div class="portlet-body flip-scroll">
+                    <table id="plans" class="table table-bordered table-striped table-condensed flip-content">
+                        <thead class="flip-content">
+                            <tr>
+                                <th width="20%"> Start </th>
+                                <th>End</th>
+                                <th class="numeric"> Description</th>
+                                <th class="numeric">Empcd</th>
+                                <th>Actions</th>
+                                <th style="visibility:hidden;"></th>
+                            </tr>
+                        </thead>
+                        <tbody class="htmltbody1">
+
+                            @{if (Model.DayPlan != null)
+                                {
+                                    foreach (var d in Model.DayPlan)
+                                    {
+                                        <tr>
+                                            <td id="starttime" class="numeric">@d.Start</td>
+                                            <td id="end" class="numeric">@d.End</td>
+                                            <td id="Desc" class="numeric">@d.Description</td>
+                                            <td id="empcd" class="numeric">@d.Empcd</td>
+
+                                            <td>
+                                                <a id="SelectedRow" class="btnSelect" onclick="test()" data-toggle="modal" data-target="#myModal"><span style="background-color:green" class="btn btn-success glyphicon glyphicon-saved"></span></a>
+                                                <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+                                                <script>
+                                                    $(document).ready(function () {
+
+                                                        $(".btnSelect").on('click', function () {
+                                                            var currentRow = $(this).closest("tr");
+                                                            var from = currentRow.find("td:eq(0)").html();
+                                                            var to = currentRow.find("td:eq(1)").html();
+                                                            var Desc = currentRow.find("td:eq(2)").html();
+                                                            var empcd = currentRow.find("td:eq(3)").html();
+                                                            var _date = currentRow.find("td:eq(5)").html();
+
+                                                            $('#_From').val(from);
+                                                            $('#_To').val(to);
+                                                            $('#_Description').val(Desc);
+                                                            $('#_Empcd').val(empcd);
+                                                            $('#_date').val(_date);
+
+                                                            $(".loading").css("display", "block");
+                                                            var Objs = {
+                                                                PlanDate: _date,
+                                                                Empcd: empcd,
+                                                                Desc: Desc,
+                                                                End: to,
+                                                                Start: from
+                                                            };
+                                                            $.ajax({
+                                                                url: "/DayWise/GetWorksheetInfo",
+                                                                data: JSON.stringify(Objs),
+                                                                type: "POST",
+                                                                contentType: "application/json;charset=utf-8",
+                                                                dataType: "json",
+                                                                success: function (result) {
+                                                                    if (result != null) {
+                                                                        var htmltbody3 = '';
+                                                                        if (result.length > 0) {
+
+                                                                            $.each(result, function (key, item) {
+                                                                                htmltbody3 += '<tr>';
+                                                                                htmltbody3 += '<td>' + item.Start + '</td> ';
+                                                                                htmltbody3 += '<td>' + item.End + '</td>';
+                                                                                htmltbody3 += '<td>' + item.Desc + '</td>';
+                                                                                htmltbody3 += '<td>' + item.Empcd + '</td>';
+                                                                                htmltbody3 += '</tr>';
+                                                                                $('.htmltbody3').html(htmltbody3)
+                                                                            })
+                                                                        }
+                                                                        else {
+                                                                            htmltbody3 += '<tr>';
+                                                                            htmltbody3 += '<td colspan="4"><div style="color:#ff0000;" align="center">No Data</div></td>';
+                                                                            htmltbody3 += '</tr>';
+                                                                            $('.htmltbody3').html(htmltbody3);
+                                                                        }
+                                                                    }
+                                                                    else {
+                                                                        alert(result.Error);
+                                                                    }
+                                                                },
+                                                                error: function (errormessage) {
+                                                                    alert(errormessage.responseText);
+                                                                }
+                                                            });
+                                                        });
+                                                    });
+                                                </script>
+                                                @*<a href="/DayWise/DeletePlan?EventId=@d.EventID" style="background-color:red" class="btn btn-danger"><span class="glyphicon glyphicon-remove "></span></a>*@
+                                                @*<a  style="background-color:red" class="btn btn-danger" href ="@Url.Action("DeletePlan", "DayWise", new { SelectedID = EncryptDecryptQueryString.EncryptDecrypt.Encrypt("Empcd=" + Session["Empcd"] + "&EventID=" +@d.EventID) })"><span class="glyphicon glyphicon-remove "></span></a>*@
+                                                <a href="/DayWise/DeletePlan?EventId=@d.EventID&Empcd=@d.Empcd"><span style="background-color:red" class="btn btn-danger glyphicon glyphicon-remove "></span></a>
+                                            </td>
+                                            <td style="visibility:hidden;">@d.Date</td>
+                                        </tr>
+                                    }
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <form name="ModelFrm" method="post" action="@Url.Action("DayPlansInsert", "DayWise")" id="ModelFrm">
+        <div class="modal fade" id="myModal" role="dialog">
+            <div class="modal-dialog" style="width:1140px; ">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <center><span style="font-size:20px; color:steelblue"><b>Day Plans Details</b></span></center>
+                    </div>
+                    <div class="modal-body" style="overflow-y:scroll; height:450px;">
+                        <div class=" form-group">
+                            <div class="col-lg-12">
+                                <div class="row">
+                                    <div class="col-lg-2">
+                                        <span style="font-size:medium"><b>Date</b><span style="color:#ff0000;">*</span></span>
+                                        <input type="text" name="date" id="_date" class="form-control" style="width:160px;" required />
+                                    </div>
+
+                                    <div class="col-lg-2">
+                                        <span style="font-size:medium"><b>From Time</b><span style="color:#ff0000;">*</span></span>
+                                        <input type="text" class="form-control" min="08:00" max="22:00" name="From" id="_From" required />
+                                    </div>
+                                    <div class="col-lg-2">
+                                        <span style="font-size:medium"><b>To Time</b><span style="color:#ff0000;">*</span></span>
+                                        <input type="text" class="form-control" min="08:00" max="22:00" name="To" id="_To" required />
+                                    </div>
+                                    <div class="col-lg-5">
+                                        <span style="font-size:medium"><b>Description</b><span style="color:#ff0000;">*</span></span>
+                                        <textarea type="text" id="_Description" name="Description" placeholder="Enter Your Day Plans" class="form-control col-md-3" required></textarea>
+                                        <input type="hidden" id="_Empcd" />
+                                    </div>
+                                </div>
+                                <hr />
+                                <div class="row">
+                                    <div style="padding-left:450px; display:inline">
+                                        <button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-saved">Save</span></button>
+                                    </div>
+                                    <div style="display:inline">
+                                        <button type="reset" class="btn btn-warning"><span class="glyphicon glyphicon-remove ">Clear</span></button>
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <div class="portlet box green">
+                                        <div class="portlet-title">
+                                            <div class="caption">
+                                                <span class="glyphicon glyphicon-paperclip"></span>Day Plans WorkSheet
+                                            </div>
+                                            <div class="tools">
+                                                <a href="javascript:;" class="collapse"></a>
+                                                <a href="#portlet-config" data-toggle="modal" class="config"></a>
+                                                <a href="javascript:;" class="reload"></a>
+                                                <a href="javascript:;" class="remove"></a>
+                                            </div>
+                                        </div>
+                                        <div class="portlet-body flip-scroll">
+                                            <table class="table table-bordered table-striped table-condensed flip-content">
+                                                <thead class="flip-content">
+                                                    <tr>
+                                                        <th width="20%">Start Time </th>
+                                                        <th>End Time</th>
+                                                        <th class="numeric"> Description</th>
+                                                        <th class="numeric">Empcd</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="htmltbody3"></tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    </form>
+</body>
+</html>
